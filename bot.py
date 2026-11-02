@@ -100,6 +100,9 @@ class Bot:
         if command == '/id':
             return self.send(chat['id'], f"Ваш Telegram ID: {message['from']['id']}")
         if command == '/start':
+            self.api('setChatMenuButton', chat_id=chat['id'], menu_button={
+                'type': 'web_app', 'text': 'Каталог',
+                'web_app': {'url': self.app_url}})
             name = message.get('from', {}).get('first_name', '')
             self.send(chat['id'], f'Привет, {name}! 👋\n'
                                   'Это Project Hub — здесь можно купить готовые проекты.\n'
@@ -194,6 +197,24 @@ def main():
         raise SystemExit('Укажите WEBHOOK_SECRET (32–256 символов A-Z, a-z, 0-9, _, -).')
     domain = settings.get('BOT_DOMAIN', 'bot.project-hub.asia')
     bot = Bot(settings['BOT_TOKEN'], domain, settings.get('ADMIN_ID', ''))
+    if '--polling' in sys.argv:
+        bot.api('deleteWebhook', drop_pending_updates=False)
+        logging.info('Бот получает сообщения через long polling')
+        offset = 0
+        while True:
+            try:
+                updates = bot.api('getUpdates', offset=offset, timeout=25,
+                                  allowed_updates=['message', 'callback_query'])
+                for update in updates:
+                    try:
+                        bot.handle(update)
+                    except Exception as exc:
+                        logging.error('Обработка сообщения: %s', type(exc).__name__)
+                    offset = update['update_id'] + 1
+            except RuntimeError as exc:
+                logging.error('%s', exc)
+                time.sleep(3)
+        return
     if '--set-webhook' in sys.argv:
         url = f'https://{domain}{WEBHOOK_PATH}'
         bot.api('setWebhook', url=url, secret_token=secret,
