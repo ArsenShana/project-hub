@@ -1,0 +1,8 @@
+{
+  "tool": "image_gen",
+  "prompts": [
+    "Use case: stylized-concept. Asset type: square thumbnail illustration for a dark glass Telegram app project catalog. Subject: microservices architecture using Docker and Kubernetes, a beautiful floating cluster of translucent glass server cubes linked by luminous violet and cyan connections, one central orchestration hub. Premium 3D editorial render, black backdrop, soft bloom rim lighting, centered readable silhouette, no text, no letters, no watermarks. Save output for project integration.",
+    "Use case: stylized-concept. Asset type: square thumbnail illustration for a dark glass Telegram app project catalog. Subject: CI/CD automation with static code analysis and test coverage, a luminous circular deployment pipeline with three glass modules: code brackets, shield with checkmark, rocket launching. Premium 3D editorial render, black backdrop, violet and cyan lighting matching a futuristic glass server illustration, centered composition readable at small size, no text, no letters, no watermark. Save output for project integration.",
+    "Use case: stylized-concept. Asset type: square thumbnail illustration for a dark glass Telegram app project catalog. Subject: REST versus GraphQL performance comparison, two elegant translucent glass data structures facing each other: a blue branching endpoint network and a violet connected graph, luminous performance bars between them. Premium 3D editorial render, black backdrop, soft violet and cyan bloom, centered simple silhouette readable at small size, no text, no letters, no watermark. Save output for project integration."
+  ]
+}

@@ -135,6 +135,18 @@ def handler(bot, secret):
                 return self.reply(200, {'service': 'helpder', 'status': 'ok'})
             if path == '/api/projects':
                 return self.reply(200, load_projects())
+            if path in {'/app/assets/microservices.png', '/app/assets/cicd.png',
+                        '/app/assets/api-comparison.png'}:
+                asset = ROOT / 'app' / 'assets' / path.rsplit('/', 1)[-1]
+                if not asset.is_file():
+                    return self.reply(404, {'error': 'not found'})
+                body = asset.read_bytes()
+                self.send_response(200)
+                self.send_header('Content-Type', 'image/png')
+                self.send_header('Content-Length', str(len(body)))
+                self.send_header('Cache-Control', 'public, max-age=3600')
+                self.end_headers()
+                return self.wfile.write(body)
             if path == '/app/':
                 body = APP_PAGE.read_bytes()
                 self.send_response(200)

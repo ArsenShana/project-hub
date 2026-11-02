@@ -6,61 +6,110 @@
 <title>Project Hub</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-  :root {
-    --bg: var(--tg-theme-bg-color, #ffffff);
-    --bg2: var(--tg-theme-secondary-bg-color, #f2f3f5);
-    --text: var(--tg-theme-text-color, #111111);
-    --hint: var(--tg-theme-hint-color, #8a8f98);
-    --accent: var(--tg-theme-button-color, #2f80ed);
-    --accent-text: var(--tg-theme-button-text-color, #ffffff);
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg2); color: var(--text);
-    font: 15px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-  header { padding: 16px 16px 8px; }
-  h1 { margin: 0 0 12px; font-size: 22px; }
-  .search {
-    width: 100%; padding: 10px 12px; border: 0; border-radius: 10px;
-    background: var(--bg); color: var(--text); font-size: 15px; outline: none;
-  }
-  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 12px 16px 4px; scrollbar-width: none; }
-  .chip {
-    flex: none; border: 0; border-radius: 16px; padding: 6px 14px;
-    background: var(--bg); color: var(--text); font-size: 14px; cursor: pointer;
-  }
-  .chip.active { background: var(--accent); color: var(--accent-text); }
-  main { padding: 8px 16px 24px; display: grid; gap: 10px; }
-  .card {
-    display: flex; gap: 12px; align-items: center; padding: 12px;
-    background: var(--bg); border-radius: 14px; cursor: pointer;
-  }
-  .icon {
-    flex: none; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
-    background: var(--bg2); font-size: 26px;
-  }
-  .card .title { font-weight: 600; }
-  .meta { color: var(--hint); font-size: 13px; }
-  .price { margin-left: auto; font-weight: 600; white-space: nowrap; }
-  .empty { text-align: center; color: var(--hint); padding: 40px 0; }
-  .detail { display: none; padding: 16px; }
-  .detail .icon { width: 72px; height: 72px; font-size: 40px; background: var(--bg); }
-  .detail h2 { margin: 14px 0 4px; font-size: 20px; }
-  .detail .box { background: var(--bg); border-radius: 14px; padding: 14px; margin-top: 14px; }
-  .detail .big { font-size: 22px; font-weight: 700; }
-  body.show-detail .list-view { display: none; }
-  body.show-detail .detail { display: block; }
+:root { color-scheme: dark; --bg:#292a29; --bg2:#232423; --text:#f5f5f1; --hint:#a0a29c; --accent:#e8eddc; }
+* { box-sizing:border-box; }
+body { margin:0; background:#000; color:var(--text); font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; min-height:100vh; }
+button,input { font:inherit; } button { cursor:pointer; -webkit-tap-highlight-color:transparent; }
+button:focus-visible,input:focus-visible { outline:2px solid #d4dfbe; outline-offset:4px; }
+.list-view,.detail { max-width:560px; margin:auto; }
+header { padding:26px 22px 12px; }
+.topbar { display:flex; align-items:center; justify-content:space-between; gap:15px; }
+h1 { margin:0; font-size:29px; font-weight:600; letter-spacing:-1px; }
+.tool { width:40px; height:40px; display:grid; place-items:center; border:1px solid #ffffff08; border-radius:14px; color:#d5d7d0; background:#ffffff06; }
+.tool svg { width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.eyebrow { text-align:center; margin:16px 0 0; color:var(--hint); font-size:11px; letter-spacing:2.3px; text-transform:uppercase; }
+.search { display:none; width:100%; margin-top:18px; padding:12px 15px; border:1px solid #ffffff19; border-radius:14px; background:#ffffff06; color:var(--text); outline:none; }
+.search.visible { display:block; }
+.chips { display:flex; gap:8px; overflow-x:auto; padding:15px 22px 22px; scrollbar-width:none; }
+.chips::-webkit-scrollbar { display:none; }
+.chip { flex:none; border:1px solid #ffffff12; border-radius:30px; padding:10px 20px; background:transparent; color:#aaaDA5; font-size:12px; transition:background .2s,border-color .2s; }
+.chip.active { border-color:#a6aaa0; color:#f6f7ef; background:#ffffff08; box-shadow:inset 0 0 0 1px #ffffff0c; }
+.section-line { display:flex; justify-content:space-between; padding:0 24px 12px; color:#a0a398; font-size:11px; letter-spacing:1.4px; text-transform:uppercase; }
+main { padding:0 18px 24px; display:grid; gap:10px; }
+.card { width:100%; display:flex; text-align:left; gap:15px; align-items:stretch; padding:8px; border:1px solid #ffffff03; color:inherit; background:linear-gradient(125deg,#3a3c38,#323430); border-radius:25px; cursor:pointer; box-shadow:0 6px 16px #00000012; transition:transform .2s,background .2s; }
+.card:hover { transform:translateY(-2px); background:#3e413a; }
+.icon { flex:none; position:relative; isolation:isolate; width:116px; height:130px; border-radius:19px; display:grid; place-items:center; background:radial-gradient(ellipse at 50% 35%,#9d84b269,#51405d 65%,#343237); font-size:65px; overflow:hidden; text-shadow:0 13px 14px #0008; }
+.icon::after { content:''; position:absolute; z-index:-1; width:80px; height:16px; bottom:14px; border-radius:50%; background:#0005; filter:blur(7px); }
+.art-1 { background:radial-gradient(ellipse at 45% 30%,#bea4dc8a,#56445e 65%,#37343b); }
+.art-2 { background:radial-gradient(ellipse at 45% 30%,#d5b269,#635337 65%,#3a3830); }
+.art-3 { background:radial-gradient(ellipse at 45% 30%,#99c9aa80,#3f5c4c 65%,#303d35); }
+.art-0 { background:radial-gradient(ellipse at 45% 30%,#8aafd18a,#3d5062 65%,#30373e); }
+.card-content { flex:1; min-width:0; display:flex; flex-direction:column; padding:7px 8px 7px 0; }
+.creator { display:flex; align-items:center; gap:6px; color:#b4b7ac; font-size:10px; }
+.avatar { width:18px; height:18px; display:grid; place-items:center; border-radius:50%; background:#d5ddc3; color:#414a35; font-size:9px; font-weight:700; }
+.title { margin:auto 0 5px; padding-top:15px; font-size:17px; line-height:1.25; font-weight:550; letter-spacing:-.35px; }
+.card-bottom { display:flex; flex-wrap:wrap; align-items:center; gap:5px 10px; }
+.meta { color:var(--hint); font-size:11px; }
+.price { color:#e0e5d6; font-size:12px; font-weight:500; }
+.footer { padding:0 20px 26px; text-align:center; font-size:10px; color:#7f8378; letter-spacing:1.5px; }
+.empty { text-align:center; color:var(--hint); padding:40px 0; }
+.detail { display:none; padding:24px 22px 40px; }
+.detail .icon { margin:24px auto; width:180px; height:195px; font-size:100px; border-radius:30px; }
+.detail h2 { margin:18px 0 8px; font-size:27px; line-height:1.2; letter-spacing:-.7px; }
+.detail .box { background:#ffffff07; border:1px solid #ffffff09; border-radius:20px; padding:20px; margin-top:16px; color:#cbd0c1; }
+.detail .big { font-size:28px; color:var(--text); font-weight:600; margin-top:5px; }
+.order-button { width:100%; border:0; background:#e1e8d3; color:#252a20; border-radius:17px; padding:16px; font-weight:600; margin-top:20px; }
+body.show-detail .list-view { display:none; } body.show-detail .detail { display:block; }
+@media(max-width:350px) { .icon { width:95px; height:120px; font-size:52px; } .title { font-size:15px; } .card { gap:10px; } }
+@media(prefers-reduced-motion:reduce) { * { transition:none!important; } }
+
+/* Ambient light behind translucent surfaces. */
+body::before { content:''; position:fixed; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(ellipse at 12% 16%,#8460ff35,transparent 44%),radial-gradient(ellipse at 95% 48%,#39badb24,transparent 43%),radial-gradient(ellipse at 30% 95%,#7052e51c,transparent 45%); }
+body { isolation:isolate; }
+.tool,.chip,.card,.topic-panel,.detail .box { -webkit-backdrop-filter:blur(24px); backdrop-filter:blur(24px); background:linear-gradient(135deg,#ffffff12,#ffffff04); border:1px solid #ffffff20; box-shadow:inset 0 1px 0 #ffffff0b,0 12px 30px #0003; }
+.card:hover { background:linear-gradient(135deg,#ffffff1b,#ffffff09); }
+.chip.active { border-color:#c8bcff80; background:#b6a0ff20; color:#f4efff; }
+.eyebrow { color:#a3a0b0; }
+.topic-panel { margin-top:25px; padding:22px; border-radius:25px; }
+.topic-panel label { display:block; font-size:23px; font-weight:550; letter-spacing:-.7px; }
+.topic-panel p { margin:7px 0 19px; color:#aaa5b8; font-size:12px; }
+.search-wrap { position:relative; }
+.search { display:block; margin:0; padding:16px 44px 16px 15px; font-size:14px; background:#0005; border:1px solid #ffffff20; border-radius:15px; }
+.search::placeholder { color:#918c9f; }
+.search-wrap::after { content:'↗'; position:absolute; top:11px; right:15px; font-size:23px; color:#cec0fc; pointer-events:none; }
+.section-line { color:#c8c4d2; letter-spacing:.3px; text-transform:none; font-size:15px; padding-bottom:16px; }
+.section-line #count { font-size:12px; color:#9891a8; }
+.price { font-size:16px; color:#ece5ff; font-weight:600; }
+.card-bottom { margin-top:4px; }
+.title { color:#f5f3fa; }
+.meta,.creator { color:#aaa5b6; }
+.icon { box-shadow:inset 0 0 25px #0004; }
+.order-button { background:#dfd4ff; color:#241d38; }
+.footer { color:#81788f; }
+
+.project-image { display:block; width:100%; height:100%; object-fit:cover; }
+.card .project-image { position:absolute; inset:0; object-fit:contain; }
+.card .icon { height:auto; min-height:155px; align-self:stretch; background:#090711; }
+.card .title { font-size:14px; line-height:1.4; margin-top:10px; padding-top:0; }
+.card .card-content { padding-top:5px; }
+.old-price { font-size:12px; color:#a8a0b7; text-decoration-thickness:1px; }
+.discount { display:inline-block; border:1px solid #c4abff35; background:#b093ff19; color:#ddccff; border-radius:7px; padding:3px 7px; font-size:10px; }
+.price-line { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.card-bottom { margin-top:10px; }
+.detail .icon { width:100%; height:auto; aspect-ratio:1.35; }
+.detail .project-image { object-fit:contain; background:#07050d; }
+.detail .big { margin:8px 0 0; }
+@media(max-width:350px) { .card .icon { width:86px; } .card .title { font-size:13px; } }
 </style>
 </head>
 <body>
 <div class="list-view">
   <header>
-    <h1>Project Hub</h1>
-    <input class="search" id="search" type="search" placeholder="Поиск темы">
+    <div class="topbar">
+      <button class="tool" id="home-back" aria-label="Закрыть приложение"><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6M8 12h12"/></svg></button>
+      <h1>Каталог</h1>
+      <button class="tool" id="search-toggle" aria-label="Поиск проектов" aria-controls="search"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg></button>
+    </div><div class="eyebrow">Project Hub · готовые проекты</div>
+    <div class="topic-panel">
+      <label for="search">Какая у тебя тема?</label>
+      <p>Найди готовый проект для своей идеи</p>
+      <div class="search-wrap"><input class="search" id="search" type="search" placeholder="Например, Telegram-бот" autocomplete="off"></div>
+    </div>
   </header>
   <div class="chips" id="chips"></div>
+  <div class="section-line"><span>Готовые проекты</span><span id="count"></span></div>
   <main id="list"><div class="empty">Загрузка…</div></main>
+  <div class="footer">СОЗДАВАЙ. ЗАПУСКАЙ. ВДОХНОВЛЯЙСЯ.</div>
 </div>
 <section class="detail" id="detail"></section>
 
@@ -68,6 +117,9 @@
 const tg = window.Telegram?.WebApp;
 tg?.ready();
 tg?.expand();
+tg?.setHeaderColor?.('#000000');
+tg?.setBackgroundColor?.('#000000');
+if (tg?.MainButton) tg.MainButton.setParams({color:'#dfd4ff',text_color:'#241d38'});
 
 let projects = [];
 let category = 'Все';
@@ -87,22 +139,30 @@ function renderList() {
   const items = projects.filter(p =>
     (category === 'Все' || p.category === category) &&
     (p.title + ' ' + p.description).toLowerCase().includes(q));
+  $('count').textContent = String(items.length).padStart(2, '0');
   $('list').innerHTML = items.length ? items.map(p => `
-    <div class="card" data-id="${p.id}">
-      <div class="icon">${esc(p.emoji)}</div>
-      <div><div class="title">${esc(p.title)}</div><div class="meta">${esc(p.category)}</div></div>
-      <div class="price">${price(p.price)}</div>
-    </div>`).join('') : '<div class="empty">Ничего не найдено</div>';
+    <button class="card" data-id="${p.id}" aria-label="${esc(p.title)} — ${price(p.price)}">
+      <div class="icon art-${Number(p.id) % 4}" aria-hidden="true"><img class="project-image" src="${esc(p.image)}" alt="" loading="lazy" width="512" height="512"></div>
+      <div class="card-content">
+        <div class="creator"><span class="avatar">P</span> Project Hub <span aria-hidden="true">↗</span></div>
+        <div class="title">${esc(p.title)}</div>
+        <div class="card-bottom"><div class="price-line"><del class="old-price">${price(p.oldPrice)}</del><span class="discount">−${price(p.oldPrice - p.price)}</span></div><span class="price">${price(p.price)}</span></div>
+      </div>
+    </button>`).join('') : '<div class="empty">Ничего не найдено</div>';
 }
 
 function openDetail(p) {
   current = p;
   $('detail').innerHTML = `
-    <div class="icon">${esc(p.emoji)}</div>
+    <button class="tool" id="detail-back" aria-label="Назад к каталогу">←</button>
+    <div class="icon art-${Number(p.id) % 4}"><img class="project-image" src="${esc(p.image)}" alt="Иллюстрация проекта" width="512" height="512"></div>
     <h2>${esc(p.title)}</h2>
     <div class="meta">${esc(p.category)}</div>
     <div class="box">${esc(p.description)}</div>
-    <div class="box"><div class="meta">Цена</div><div class="big">${price(p.price)}</div></div>`;
+    <div class="box"><div class="meta">Цена проекта</div><div class="price-line"><del class="old-price">${price(p.oldPrice)}</del><span class="discount">−${price(p.oldPrice - p.price)}</span></div><div class="big">${price(p.price)}</div></div>
+    <button class="order-button" id="order-button">Оставить заявку ↗</button>`;
+  $('detail-back').onclick = closeDetail;
+  $('order-button').onclick = order;
   document.body.classList.add('show-detail');
   window.scrollTo(0, 0);
   tg?.BackButton.show();
@@ -148,6 +208,11 @@ $('list').addEventListener('click', e => {
   const card = e.target.closest('.card');
   if (card) openDetail(projects.find(p => p.id === Number(card.dataset.id)));
 });
+$('search-toggle').addEventListener('click', () => {
+  $('search').focus();
+  $('search').scrollIntoView({behavior: 'smooth', block: 'center'});
+});
+$('home-back').addEventListener('click', () => { if (tg?.initData) tg.close(); else { category = 'Все'; $('search').value = ''; renderChips(); renderList(); } });
 $('search').addEventListener('input', renderList);
 tg?.BackButton.onClick(closeDetail);
 tg?.MainButton.onClick(order);
